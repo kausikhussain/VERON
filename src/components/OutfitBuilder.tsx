@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Product, OutfitSlot } from '../types';
-import { Layers, Plus, Trash2, ShoppingBag, Sparkles, Check, ArrowRight, X } from 'lucide-react';
+import { Product, OutfitSlot, AIStylistResult } from '../types';
+import { Layers, Plus, Trash2, ShoppingBag, Sparkles, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface OutfitBuilderProps {
@@ -10,6 +10,7 @@ interface OutfitBuilderProps {
   products: Product[];
   onAddMultipleToCart: (items: Product[]) => void;
   currency: string;
+  initialStylistResult?: AIStylistResult | null;
 }
 
 export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
@@ -18,13 +19,35 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
   products,
   onAddMultipleToCart,
   currency,
+  initialStylistResult,
 }) => {
+  // Pre-fill initial slot choices with flagship men's items
   const [slots, setSlots] = useState<OutfitSlot[]>([
-    { id: 'jacket', name: 'Jacket / Outerwear', product: products.find((p) => p.category === 'Formal' || p.category === 'Luxury Essentials') },
-    { id: 'shirt', name: 'Shirt / Knitwear', product: products.find((p) => p.id === 'prod-8') },
-    { id: 'trousers', name: 'Trousers / Bottoms', product: products.find((p) => p.category === 'Athleisure') },
-    { id: 'footwear', name: 'Footwear', product: products.find((p) => p.category === 'Footwear') },
-    { id: 'accessory', name: 'Accessory / Watch', product: products.find((p) => p.category === 'Accessories') },
+    {
+      id: 'jacket',
+      name: 'Suit Jacket / Blazer / Outerwear',
+      product: products.find((p) => p.subcategory === 'Suits' || p.subcategory === 'Blazers' || p.category === 'Top Wear'),
+    },
+    {
+      id: 'shirt',
+      name: 'Shirt / Polo / Knitwear',
+      product: products.find((p) => p.subcategory === 'Shirts' || p.subcategory === 'Polo Shirts'),
+    },
+    {
+      id: 'trousers',
+      name: 'Trousers / Chinos / Denim',
+      product: products.find((p) => p.category === 'Bottom Wear'),
+    },
+    {
+      id: 'footwear',
+      name: 'Shoes / Oxfords / Boots',
+      product: products.find((p) => p.category === 'Footwear'),
+    },
+    {
+      id: 'accessory',
+      name: 'Watch / Leather Accessories',
+      product: products.find((p) => p.category === 'Accessories'),
+    },
   ]);
 
   const [activeSlotId, setActiveSlotId] = useState<string | null>(null);
@@ -90,10 +113,10 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
             </div>
             <div>
               <h3 className="font-serif text-2xl uppercase text-[#F8F9FA]">
-                BESPOKE OUTFIT BUILDER
+                MENSWEAR BESPOKE OUTFIT BUILDER
               </h3>
               <p className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase">
-                INTERACTIVE ENSEMBLE COMPOSITOR
+                5-SLOT HEAD-TO-TOE ENSEMBLE COMPOSITOR
               </p>
             </div>
           </div>
@@ -222,7 +245,7 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
             ) : (
               <div className="space-y-4">
                 <p className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase">
-                  ENSEMBLE VALUATION
+                  ENSEMBLE VALUATION & SERVICES
                 </p>
 
                 <div className="p-4 bg-[#121316] border border-[#1F2128] rounded space-y-3">
@@ -235,8 +258,8 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
                     <span className="text-[#C5A059]">INCLUDED</span>
                   </div>
                   <div className="flex justify-between text-xs text-[#EFECE6]/70">
-                    <span>Bespoke Hanger & Garment Bag:</span>
-                    <span className="text-[#C5A059]">INCLUDED</span>
+                    <span>Mayfair Monogramming:</span>
+                    <span className="text-[#C5A059]">COMPLIMENTARY</span>
                   </div>
 
                   <div className="pt-3 border-t border-[#1F2128] flex items-center justify-between font-serif text-2xl text-[#F8F9FA]">
@@ -251,7 +274,7 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
             <button
               onClick={handleAddEnsembleToBag}
               disabled={slots.filter((s) => s.product).length === 0}
-              className="w-full py-3.5 bg-[#C5A059] text-[#08080A] font-medium text-xs tracking-[0.2em] uppercase rounded flex items-center justify-center gap-2 cursor-pointer hover:bg-[#EFECE6] transition-colors disabled:opacity-40"
+              className="w-full py-3.5 bg-[#C5A059] text-[#08080A] font-bold text-xs tracking-[0.2em] uppercase rounded flex items-center justify-center gap-2 cursor-pointer hover:bg-[#EFECE6] transition-colors disabled:opacity-40"
             >
               <ShoppingBag className="w-4 h-4" />
               <span>Add Entire Outfit to Bag ({formattedTotal})</span>

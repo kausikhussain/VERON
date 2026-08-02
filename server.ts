@@ -37,78 +37,124 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", brand: "AURELIUS & CO." });
 });
 
-// AI Stylist Endpoint
+// AI Stylist Endpoint (Exclusively for Men's Couture)
 app.post("/api/ai-stylist", async (req, res) => {
+  const { occasion, season, budget, colorScheme, prompt } = req.body;
+
   const fallbackStylistResponse = {
-    title: "The Mayfair Executive Ensemble",
-    concept: "A masterclass in quiet authority. Sharp peak lapels paired with seamless Vicuña trousers and polished Chelsea boots in burnished espresso calfskin.",
-    palette: ["#0B0C10 OLED Black", "#2C3539 Charcoal", "#C5A059 Champagne Gold"],
+    title: `The Mayfair Gentleman - ${occasion || 'Executive'} Ensemble`,
+    concept: "A masterclass in masculine structure and quiet authority. Perfectly balanced proportions pairing tactile Vicuña and worsted wool with precision accessories.",
+    occasion: occasion || 'Business',
+    budgetRange: budget || 'Executive ($2,500 - $5,000)',
+    colorMatchingNotes: colorScheme || 'Monochromatic OLED Black & Gold',
+    palette: ["#08080A OLED Black", "#2C3539 Charcoal", "#C5A059 Champagne Gold"],
     items: [
       {
-        category: "Jacket / Outerwear",
-        name: "Bespoke Peak-Lapel Double-Breasted Jacket",
-        fabric: "Loro Piana Super 180s Wool & Vicuña Blend",
-        stylingNotes: "Keep the bottom button unfastened; ensure cuff displays 1.5 cm of shirt linen",
-        price: 5200
+        category: "Shirt / Top",
+        name: "Sea Island Cotton 200s Spread-Collar Shirt",
+        fabric: "100% West Indian Sea Island Cotton",
+        stylingNotes: "Structured collar stiffeners inserted; hand-rolled French cuffs",
+        price: 650
       },
       {
-        category: "Shirt / Knitwear",
-        name: "Sea Island Cotton Spread-Collar Dress Shirt",
-        fabric: "100% Giza 87 Egyptian Cotton (200s Two-Ply)",
-        stylingNotes: "Structured collar stiffeners inserted; hand-rolled cuffs",
-        price: 850
-      },
-      {
-        category: "Trousers",
-        name: "Pleated High-Waisted Tailored Trousers",
-        fabric: "English Worsted Flannel",
-        stylingNotes: "Side waist adjusters cinched without belt loops for a clean waistline",
+        category: "Pants / Bottom",
+        name: "Pleated High-Waisted Worsted Flannel Trousers",
+        fabric: "100% English Worsted Flannel",
+        stylingNotes: "Extended side waist cinchers; 5cm turn-up cuff hem",
         price: 1450
       },
       {
-        category: "Footwear",
-        name: "Hand-Welted Wholecut Oxford Shoes in Espresso",
-        fabric: "Full-Grain French Calfskin",
-        stylingNotes: "Mirror-shine polished toe cap with high-density leather sole",
+        category: "Shoes / Footwear",
+        name: "Wholecut French Calfskin Oxford Shoes",
+        fabric: "Full-Grain French Box Calfskin",
+        stylingNotes: "Mirror-shine polished toe cap with oak-bark leather sole",
         price: 1950
       },
       {
+        category: "Watch",
+        name: "AURELIUS Chrono Tourbillon Titanium 42mm",
+        fabric: "Grade 5 Titanium & 18k Gold",
+        stylingNotes: "Manual wind Calibre A-900 with alligator strap",
+        price: 24500
+      },
+      {
+        category: "Sunglasses",
+        name: "Japan Beta-Titanium Polarized Sunglasses",
+        fabric: "Beta Titanium & ZEISS Optics",
+        stylingNotes: "Gold leaf filigree on rim edge",
+        price: 880
+      },
+      {
+        category: "Belt",
+        name: "Full-Grain Calfskin Dress Belt",
+        fabric: "Box Calfskin & Solid Champagne Brass",
+        stylingNotes: "32mm width matching shoe patina",
+        price: 520
+      },
+      {
+        category: "Wallet",
+        name: "Crocodile Leather Slim Cardholder",
+        fabric: "Certified Porosus Crocodile Skin",
+        stylingNotes: "Hand-lacquered edges with RFID shielding",
+        price: 780
+      },
+      {
+        category: "Perfume / Cologne",
+        name: "No. IX Smoked Frankincense & Amber Oud 100ml",
+        fabric: "25% Eau de Parfum Extract",
+        stylingNotes: "Apply to pulse points prior to buttoning shirt",
+        price: 420
+      },
+      {
         category: "Accessories",
-        name: "AURELIUS Chrono Tourbillon & Silk Pocket Square",
-        fabric: "18k Rose Gold & Mulberry Silk Hand-Rolled Edge",
-        stylingNotes: "Folded casually into chest pocket with subtle point exposure",
-        price: 18500
+        name: "18k Champagne Gold & Onyx Cufflinks",
+        fabric: "18k Gold & Black Onyx",
+        stylingNotes: "Secured into French cuffs for subtle wrist detail",
+        price: 1450
       }
     ],
-    groomingAndFragrance: "AURELIUS No. IX - Vetiver, Smoked Frankincense, and Tuscan Amber.",
+    groomingAndFragrance: "Pair with AURELIUS No. IX Smoked Oud & White Suede cologne alongside Mayfair Imperial Sandalwood Beard Oil.",
     atelierNote: "Our Mayfair Atelier can schedule a private fitting at your residence or hotel suite."
   };
 
   try {
-    const { occasion, weather, stylePreference, prompt } = req.body;
-
-    const userPrompt = prompt || `Assemble an ultra-luxury outfit for occasion: "${occasion || 'Business Executive'}", weather: "${weather || 'Autumn Temperate'}", style preference: "${stylePreference || 'Monochromatic Minimalist'}".`;
+    const userPrompt = prompt || `Assemble a complete 9-piece men's luxury outfit for occasion: "${occasion || 'Business'}", season: "${season || 'Autumn / Winter'}", budget range: "${budget || 'Executive'}", color scheme: "${colorScheme || 'Monochromatic Black & Gold'}".`;
 
     const systemInstruction = `You are Senior Couture Director and Chief Personal Stylist at AURELIUS & CO., the world's most prestigious luxury menswear house in London Mayfair.
-Your styling advice is highly refined, architectural, elegant, precise, and authoritative.
-When recommending outfits, return JSON with:
+Your styling advice is strictly for MEN. You assemble complete head-to-toe outfits for gentlemen.
+
+When recommending outfits, you MUST return valid JSON with exactly 9 items in the "items" array covering these 9 exact categories for men:
+1. Shirt / Top
+2. Pants / Bottom
+3. Shoes / Footwear
+4. Watch
+5. Sunglasses
+6. Belt
+7. Wallet
+8. Perfume / Cologne
+9. Accessories (e.g. Cufflinks, Pocket Square, or Leather Bag)
+
+JSON format schema:
 {
-  "title": "A short, evoke name for the ensemble (e.g. 'The Mayfair Boardroom Armor')",
-  "concept": "A 2-3 sentence editorial summary explaining the aesthetic philosophy and silhouette",
-  "palette": ["Color Name 1 with Hex e.g. #111111 OLED Black", "Color Name 2 e.g. #C5A059 Champagne Gold", "Color Name 3 e.g. #2C3539 Charcoal"],
+  "title": "Evocative male ensemble name (e.g. 'The Mayfair Boardroom Armor')",
+  "concept": "A 2-3 sentence editorial summary explaining the aesthetic philosophy and masculine silhouette",
+  "occasion": "The occasion e.g. Office, College, Date Night, Wedding, Casual, Business, Gym, Airport Look, Vacation, Winter, Summer",
+  "budgetRange": "Budget range",
+  "colorMatchingNotes": "Color harmony advice",
+  "palette": ["Color 1 e.g. #08080A OLED Black", "Color 2 e.g. #C5A059 Champagne Gold", "Color 3 e.g. #2C3539 Charcoal"],
   "items": [
     {
-      "category": "Jacket / Outerwear | Shirt / Knitwear | Trousers | Footwear | Accessories",
-      "name": "Specific luxurious item name (e.g. 'Hand-Padded Double-Breasted Cashmere Blazer in Midnight Navy')",
-      "fabric": "Material & Origin (e.g. 'Loro Piana Super 180s Cashmere & Vicuña')",
-      "stylingNotes": "How to wear or button it",
-      "price": number (in USD, e.g. 4800)
+      "category": "Shirt / Top | Pants / Bottom | Shoes / Footwear | Watch | Sunglasses | Belt | Wallet | Perfume / Cologne | Accessories",
+      "name": "Luxurious item name",
+      "fabric": "Material & Origin",
+      "stylingNotes": "Sartorial guidance on how to wear it",
+      "price": number
     }
   ],
-  "groomingAndFragrance": "Specific fragrance and grooming notes (e.g., 'Pair with AURELIUS No. V Smoked Oud & White Suede')",
-  "atelierNote": "A bespoke tailoring tip or fitting custom detail"
+  "groomingAndFragrance": "Specific male fragrance and grooming notes",
+  "atelierNote": "Bespoke tailoring or fitting tip"
 }
-Ensure the output is strictly valid JSON without markdown code fences.`;
+Ensure output is strictly valid JSON without markdown code blocks.`;
 
     if (!process.env.GEMINI_API_KEY) {
       return res.json(fallbackStylistResponse);

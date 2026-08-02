@@ -1,7 +1,19 @@
+export type MainCategory =
+  | 'Top Wear'
+  | 'Bottom Wear'
+  | 'Innerwear'
+  | 'Footwear'
+  | 'Accessories'
+  | 'Grooming'
+  | 'Luxury Essentials'
+  | 'Suits & Tailoring';
+
 export interface Product {
   id: string;
   name: string;
-  category: 'Formal' | 'Streetwear' | 'Luxury Essentials' | 'Footwear' | 'Accessories' | 'Fragrances' | 'Travel' | 'Athleisure';
+  category: MainCategory;
+  subcategory: string;
+  collections?: string[];
   price: number;
   description: string;
   image: string;
@@ -15,6 +27,8 @@ export interface Product {
   sizes: string[];
   isNew?: boolean;
   isBespoke?: boolean;
+  isTrending?: boolean;
+  isEditorPick?: boolean;
   rating?: number;
 }
 
@@ -38,9 +52,12 @@ export interface OutfitSlot {
 export interface AIStylistResult {
   title: string;
   concept: string;
+  occasion: string;
+  budgetRange?: string;
+  colorMatchingNotes?: string;
   palette: string[];
   items: {
-    category: string;
+    category: string; // e.g., Shirt, Pants, Shoes, Watch, Sunglasses, Belt, Wallet, Perfume, Accessory
     name: string;
     fabric: string;
     stylingNotes: string;
@@ -68,3 +85,4 @@ export interface AtelierBooking {
   preferredTailor?: string;
   notes?: string;
 }
+
