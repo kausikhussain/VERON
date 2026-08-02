@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { LOOKBOOK_STORIES } from '../data/lookbook';
 import { Product } from '../types';
-import { Sparkles, ArrowRight, Camera } from 'lucide-react';
+import { Sparkles, ArrowRight, Camera, Film } from 'lucide-react';
 
 interface LookbookProps {
   products: Product[];
@@ -15,15 +17,82 @@ export const Lookbook: React.FC<LookbookProps> = ({
   onSelectProduct,
   onOpenAIStylist,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      const storyCards = containerRef.current?.querySelectorAll('.lookbook-story-card');
+
+      storyCards?.forEach((card) => {
+        const img = card.querySelector('.cinematic-story-img');
+        const content = card.querySelector('.cinematic-story-content');
+
+        if (img) {
+          gsap.fromTo(
+            img,
+            {
+              scale: 1.25,
+              filter: 'blur(20px)',
+              opacity: 0.2,
+            },
+            {
+              scale: 1.0,
+              filter: 'blur(0px)',
+              opacity: 1,
+              ease: 'power2.out',
+              duration: 1.4,
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 88%',
+                end: 'top 25%',
+                scrub: 1.2,
+              },
+            }
+          );
+        }
+
+        if (content) {
+          gsap.fromTo(
+            content,
+            {
+              y: 50,
+              opacity: 0,
+            },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1.2,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: card,
+                start: 'top 82%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
+        }
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="lookbook" className="py-24 bg-[#08080A] text-[#F8F9FA] border-t border-[#1F2128]">
+    <section id="lookbook" ref={containerRef} className="py-24 bg-[#08080A] text-[#F8F9FA] border-t border-[#1F2128]">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div>
-            <span className="text-xs font-mono tracking-[0.3em] uppercase text-[#C5A059]">
-              EDITORIAL JOURNAL & LOOKBOOKS
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono tracking-[0.3em] uppercase text-[#C5A059]">
+                EDITORIAL JOURNAL & LOOKBOOKS
+              </span>
+              <span className="px-2 py-0.5 bg-[#C5A059]/10 border border-[#C5A059]/40 text-[9px] font-mono text-[#C5A059] rounded uppercase tracking-wider flex items-center gap-1">
+                <Film className="w-3 h-3" /> GSAP Cinematic Reveal
+              </span>
+            </div>
             <h2 className="font-serif text-3xl sm:text-5xl uppercase tracking-tight text-[#F8F9FA] mt-2 font-normal">
               Cinematic <br />
               <span className="italic font-light text-[#C5A059] font-serif">Fashion Stories</span>
@@ -39,37 +108,37 @@ export const Lookbook: React.FC<LookbookProps> = ({
         </div>
 
         {/* Stories List */}
-        <div className="space-y-24">
+        <div className="space-y-28">
           {LOOKBOOK_STORIES.map((story, index) => {
             const tagged = products.filter((p) => story.taggedProducts.includes(p.id));
 
             return (
               <div
                 key={story.id}
-                className={`grid grid-cols-1 lg:grid-cols-12 gap-12 items-center ${
+                className={`lookbook-story-card grid grid-cols-1 lg:grid-cols-12 gap-12 items-center ${
                   index % 2 === 1 ? 'lg:flex-row-reverse' : ''
                 }`}
               >
-                {/* Visual Editorial Image */}
+                {/* Visual Editorial Image with GSAP Reveal Target */}
                 <div
                   className={`lg:col-span-7 relative group overflow-hidden rounded border border-[#1F2128] ${
                     index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'
                   }`}
                 >
-                  <div className="aspect-[4/3] w-full relative overflow-hidden">
+                  <div className="aspect-[4/3] w-full relative overflow-hidden bg-[#08080A]">
                     <img
                       src={story.image}
                       alt={story.title}
-                      className="w-full h-full object-cover filter brightness-90 group-hover:scale-105 transition-transform duration-700"
+                      className="cinematic-story-img w-full h-full object-cover filter brightness-90 transition-transform duration-700"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#08080A] via-transparent to-transparent opacity-80" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#08080A] via-transparent to-transparent opacity-80 pointer-events-none" />
 
-                    <div className="absolute top-6 left-6 bg-[#08080A]/80 backdrop-blur-md px-3 py-1.5 rounded border border-[#1F2128] text-[10px] font-mono text-[#C5A059] uppercase">
+                    <div className="absolute top-6 left-6 bg-[#08080A]/80 backdrop-blur-md px-3 py-1.5 rounded border border-[#1F2128] text-[10px] font-mono text-[#C5A059] uppercase pointer-events-none">
                       {story.season}
                     </div>
 
-                    <div className="absolute bottom-6 left-6 flex items-center gap-2 text-[10px] font-mono text-[#EFECE6]/70">
+                    <div className="absolute bottom-6 left-6 flex items-center gap-2 text-[10px] font-mono text-[#EFECE6]/70 pointer-events-none">
                       <Camera className="w-3.5 h-3.5 text-[#C5A059]" />
                       <span>{story.photographer}</span>
                     </div>
@@ -78,7 +147,7 @@ export const Lookbook: React.FC<LookbookProps> = ({
 
                 {/* Editorial Copy & Tagged Products */}
                 <div
-                  className={`lg:col-span-5 space-y-6 ${
+                  className={`cinematic-story-content lg:col-span-5 space-y-6 ${
                     index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'
                   }`}
                 >
