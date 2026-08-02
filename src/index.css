@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .serif {
+    font-family: 'Playfair Display', 'Georgia', serif;
+  }
+  .sans {
+    font-family: 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+  .text-gold {
+    color: #C5A059;
+  }
+  .bg-gold {
+    background-color: #C5A059;
+  }
+  .border-gold {
+    border-color: #C5A059;
+  }
+  .tracking-extra {
+    letter-spacing: 0.3em;
+  }
+  .vertical-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .gold-gradient {
+    background: linear-gradient(45deg, #8a6d3b, #c5a059, #8a6d3b);
+  }
+  .suit-texture {
+    background-color: #0a0a0a;
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 4px 100%;
+  }
+}
+
+/* Custom scrollbar for dark luxury UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08080A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1F2128;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C5A059;
+}
+

@@ -1,0 +1,8 @@
+{
+  "name": "AURELIUS & CO. | Luxury Menswear Experience",
+  "description": "An ultra-premium luxury men's fashion flagship digital house featuring bespoke tailoring, interactive 3D object showcases, editorial lookbooks, drag-and-drop outfit builder, and AI Stylist.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
