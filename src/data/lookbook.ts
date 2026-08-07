@@ -6,7 +6,7 @@ export const LOOKBOOK_STORIES: LookbookItem[] = [
     title: "THE MAYFAIR SILHOUETTE",
     subtitle: "Autumn / Winter Haute Couture",
     season: "AW 2026/27",
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1200',
+    image: '/assets/men/jackets/classic-grey-double-breasted-elegance.jpeg',
     quote: "Elegance is not about being noticed, it's about being remembered.",
     photographer: "Lord David Sterling, London",
     taggedProducts: ['prod-top-1', 'prod-top-2', 'prod-top-6']
@@ -16,7 +16,7 @@ export const LOOKBOOK_STORIES: LookbookItem[] = [
     title: "ARCHITECTURAL MINIMALISM",
     subtitle: "Couture Streetwear & Knitwear",
     season: "SS 2026",
-    image: 'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&q=80&w=1200',
+    image: '/assets/men/tshirts/porche-911-gt3-oversized-t-shirt-240-gsm-premium-cotton-unisex-porsche-911-911gt3-t-shirt-oversizedtshirt-cartshirt-porsche911-aeio-porsche911-porschelife-911gtrs-carenthusiast-supercarstyle-por.jpeg',
     quote: "True luxury lives in the unseen details — the weight of silk, the whisper of cashmere.",
     photographer: "Kenji Sato, Tokyo",
     taggedProducts: ['prod-top-3', 'prod-top-4', 'prod-bot-1']
@@ -26,7 +26,7 @@ export const LOOKBOOK_STORIES: LookbookItem[] = [
     title: "GRAND TOUR EXPEDITION",
     subtitle: "Luggage & Travel Essentials",
     season: "Permanent Collection",
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&q=80&w=1200',
+    image: '/assets/women/handbags/vintage-luxury-shoulder-bag.jpeg',
     quote: "Travel is not mere movement; it is an art form executed with precision.",
     photographer: "Antoine de St. Clair, Paris",
     taggedProducts: ['prod-acc-1', 'prod-acc-2', 'prod-foot-1']

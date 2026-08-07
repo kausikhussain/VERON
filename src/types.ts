@@ -1,10 +1,15 @@
 export type MainCategory =
   | 'Top Wear'
   | 'Bottom Wear'
-  | 'Innerwear'
+  | 'Dresses & Gowns'
+  | 'Outerwear & Jackets'
   | 'Footwear'
+  | 'Handbags & Leather'
   | 'Accessories'
+  | 'Fine Jewellery'
   | 'Grooming'
+  | 'Grooming & Perfumes'
+  | 'Innerwear'
   | 'Luxury Essentials'
   | 'Suits & Tailoring';
 
@@ -13,6 +18,7 @@ export interface Product {
   name: string;
   category: MainCategory;
   subcategory: string;
+  gender?: 'men' | 'women' | 'unisex';
   collections?: string[];
   price: number;
   description: string;
@@ -30,6 +36,7 @@ export interface Product {
   isTrending?: boolean;
   isEditorPick?: boolean;
   rating?: number;
+  model3D?: 'watch' | 'sunglasses' | 'perfume' | 'jacket' | 'shoe' | 'bag';
 }
 
 export interface LookbookItem {
