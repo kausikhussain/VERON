@@ -34,10 +34,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const currencies = [
+    { code: 'INR', symbol: '₹' },
     { code: 'USD', symbol: '$' },
     { code: 'EUR', symbol: '€' },
     { code: 'GBP', symbol: '£' },
-    { code: 'JPY', symbol: '¥' },
   ];
 
   const scrollToSection = (id: string) => {
@@ -121,9 +121,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative hidden sm:block">
             <button
               onClick={() => setCurrencyDropdownOpen(!currencyDropdownOpen)}
-              className="flex items-center gap-1 text-xs font-mono text-[#EFECE6]/70 hover:text-[#C5A059] transition-colors px-2 py-1 border border-[#1F2128] rounded bg-[#08080A]/60 cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-mono text-[#EFECE6]/90 hover:text-[#C5A059] transition-colors px-2.5 py-1 border border-[#C5A059]/30 rounded bg-[#08080A]/60 cursor-pointer"
             >
-              <Globe className="w-3 h-3 text-[#C5A059]" />
+              <span className="text-[#C5A059] font-bold">₹</span>
               <span>{currency}</span>
             </button>
 

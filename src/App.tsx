@@ -5,11 +5,14 @@ import { LuxuryLoader } from './components/LuxuryLoader';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { BrandStory } from './components/BrandStory';
+import { ScrollVideoStory } from './components/ScrollVideoStory';
 import { SignatureCollection } from './components/SignatureCollection';
-import { ProductShowcase } from './components/ProductShowcase';
+import { AvantGardeShowcase } from './components/AvantGardeShowcase';
 import { ThreeDExperience } from './components/ThreeDExperience';
 import { CraftsmanshipSection } from './components/CraftsmanshipSection';
 import { Lookbook } from './components/Lookbook';
+import { LuxuryCampaignGallery } from './components/LuxuryCampaignGallery';
+import { CompleteTheLook } from './components/CompleteTheLook';
 import { FashionNewsWidget } from './components/FashionNewsWidget';
 import { ScrollProgressBar } from './components/ScrollProgressBar';
 import { CustomCursor } from './components/CustomCursor';
@@ -158,6 +161,9 @@ export default function App() {
         {/* Brand Story & Heritage */}
         <BrandStory />
 
+        {/* Premium Cinematic Scroll-Controlled Video Storytelling Experience */}
+        <ScrollVideoStory onCtaClick={() => setIsBookingModalOpen(true)} />
+
         {/* Fashion News & Search Grounded Haute Couture Intelligence */}
         <FashionNewsWidget />
 
@@ -172,12 +178,21 @@ export default function App() {
         {/* Interactive 3D WebGL Canvas Experience */}
         <ThreeDExperience />
 
-        {/* Filterable Products Collection */}
-        <ProductShowcase
+        {/* Avant-Garde Asymmetrical Editorial Magazine Showcase */}
+        <AvantGardeShowcase
           products={PRODUCTS}
           onSelectProduct={(p) => setSelectedProduct(p)}
           onAddToCart={(p) => handleAddToCart(p)}
           onAddToOutfitBuilder={(p) => setIsOutfitBuilderOpen(true)}
+          currency={currency}
+        />
+
+        {/* Curated Editorial Ensemble Hotspots */}
+        <CompleteTheLook
+          products={PRODUCTS}
+          onSelectProduct={(p) => setSelectedProduct(p)}
+          onAddToCart={(p) => handleAddToCart(p)}
+          onAddMultipleToCart={handleAddMultipleToCart}
           currency={currency}
         />
 
@@ -190,6 +205,9 @@ export default function App() {
           onSelectProduct={(p) => setSelectedProduct(p)}
           onOpenAIStylist={() => setIsAIStylistOpen(true)}
         />
+
+        {/* High-Fashion Editorial Campaign Gallery */}
+        <LuxuryCampaignGallery />
       </main>
 
       {/* Footer */}

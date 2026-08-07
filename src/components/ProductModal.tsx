@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Product } from '../types';
 import { ShoppingBag, X, Check, ShieldCheck, Feather, Layers, Sparkles, Camera } from 'lucide-react';
 import { ARVirtualTryOn } from './ARVirtualTryOn';
+import { formatINR } from '../utils/formatCurrency';
 
 interface ProductModalProps {
   product: Product | null;
@@ -10,7 +11,7 @@ interface ProductModalProps {
   onAddToCart: (product: Product, selectedColor: string, selectedSize: string, monogram?: string) => void;
   onAddToOutfitBuilder: (product: Product) => void;
   allProducts: Product[];
-  currency: string;
+  currency?: string;
 }
 
 export const ProductModal: React.FC<ProductModalProps> = ({
@@ -19,7 +20,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   onAddToCart,
   onAddToOutfitBuilder,
   allProducts,
-  currency,
+  currency = 'INR',
 }) => {
   if (!product) return null;
 
@@ -31,16 +32,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({
   const [showArTryOn, setShowArTryOn] = useState(false);
 
   const images = [product.image, ...(product.additionalImages || [])];
-
-  const currencyRates: Record<string, { symbol: string; rate: number }> = {
-    USD: { symbol: '$', rate: 1.0 },
-    EUR: { symbol: '€', rate: 0.92 },
-    GBP: { symbol: '£', rate: 0.79 },
-    JPY: { symbol: '¥', rate: 155.0 },
-  };
-
-  const curr = currencyRates[currency] || currencyRates.USD;
-  const formattedPrice = `${curr.symbol}${Math.round(product.price * curr.rate).toLocaleString()}`;
+  const formattedPrice = formatINR(product.price);
 
   const relatedProducts = allProducts
     .filter((p) => p.id !== product.id && p.category === product.category)

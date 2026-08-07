@@ -3,13 +3,14 @@ import { motion } from 'motion/react';
 import { Product, OutfitSlot, AIStylistResult } from '../types';
 import { Layers, Plus, Trash2, ShoppingBag, Sparkles, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { formatINR } from '../utils/formatCurrency';
 
 interface OutfitBuilderProps {
   isOpen: boolean;
   onClose: () => void;
   products: Product[];
   onAddMultipleToCart: (items: Product[]) => void;
-  currency: string;
+  currency?: string;
   initialStylistResult?: AIStylistResult | null;
 }
 
@@ -18,7 +19,7 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
   onClose,
   products,
   onAddMultipleToCart,
-  currency,
+  currency = 'INR',
   initialStylistResult,
 }) => {
   // Pre-fill initial slot choices with flagship men's items
@@ -52,17 +53,8 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
 
   const [activeSlotId, setActiveSlotId] = useState<string | null>(null);
 
-  const currencyRates: Record<string, { symbol: string; rate: number }> = {
-    USD: { symbol: '$', rate: 1.0 },
-    EUR: { symbol: '€', rate: 0.92 },
-    GBP: { symbol: '£', rate: 0.79 },
-    JPY: { symbol: '¥', rate: 155.0 },
-  };
-
-  const curr = currencyRates[currency] || currencyRates.USD;
-
-  const totalPriceUSD = slots.reduce((acc, slot) => acc + (slot.product ? slot.product.price : 0), 0);
-  const formattedTotal = `${curr.symbol}${Math.round(totalPriceUSD * curr.rate).toLocaleString()}`;
+  const totalPriceINR = slots.reduce((acc, slot) => acc + (slot.product ? slot.product.price : 0), 0);
+  const formattedTotal = formatINR(totalPriceINR);
 
   const handleSelectProductForSlot = (product: Product) => {
     if (!activeSlotId) return;
@@ -76,6 +68,28 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
     setSlots((prev) =>
       prev.map((s) => (s.id === slotId ? { ...s, product: undefined } : s))
     );
+  };
+
+  const getAvailableProductsForActiveSlot = () => {
+    if (!activeSlotId) return [];
+    if (activeSlotId === 'jacket') {
+      return products.filter(
+        (p) => p.subcategory === 'Suits' || p.subcategory === 'Blazers' || p.category === 'Top Wear'
+      );
+    }
+    if (activeSlotId === 'shirt') {
+      return products.filter((p) => p.subcategory === 'Shirts' || p.subcategory === 'Polo Shirts');
+    }
+    if (activeSlotId === 'trousers') {
+      return products.filter((p) => p.category === 'Bottom Wear');
+    }
+    if (activeSlotId === 'footwear') {
+      return products.filter((p) => p.category === 'Footwear');
+    }
+    if (activeSlotId === 'accessory') {
+      return products.filter((p) => p.category === 'Accessories' || p.category === 'Fine Jewellery');
+    }
+    return products;
   };
 
   const handleAddEnsembleToBag = () => {
@@ -169,8 +183,7 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
                         <>
                           <h4 className="font-serif text-sm text-[#F8F9FA]">{slot.product.name}</h4>
                           <p className="text-xs font-mono text-[#EFECE6]/70">
-                            {curr.symbol}
-                            {Math.round(slot.product.price * curr.rate).toLocaleString()}
+                            {formatINR(slot.product.price)}
                           </p>
                         </>
                       ) : (
@@ -204,23 +217,25 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
           {/* Right Column: Catalog Selection Drawer */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-4 bg-[#08080A] p-4 rounded border border-[#1F2128]">
             {activeSlotId ? (
-              <div className="space-y-3">
-                <p className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase flex items-center justify-between">
-                  <span>SELECT ITEM FOR {slots.find((s) => s.id === activeSlotId)?.name}</span>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase">
+                    SELECT PIECE FOR {activeSlotId.toUpperCase()}
+                  </span>
                   <button
                     onClick={() => setActiveSlotId(null)}
-                    className="text-[#EFECE6]/50 hover:text-[#F8F9FA]"
+                    className="text-xs text-[#EFECE6]/60 hover:text-[#F8F9FA]"
                   >
-                    Cancel
+                    Done
                   </button>
-                </p>
+                </div>
 
-                <div className="max-h-[340px] overflow-y-auto space-y-2 pr-1 no-scrollbar">
-                  {products.map((prod) => (
+                <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                  {getAvailableProductsForActiveSlot().map((prod) => (
                     <div
                       key={prod.id}
                       onClick={() => handleSelectProductForSlot(prod)}
-                      className="p-2.5 bg-[#121316] hover:bg-[#1F2128] border border-[#1F2128] hover:border-[#C5A059]/40 rounded flex items-center justify-between cursor-pointer transition-colors"
+                      className="p-2.5 bg-[#121316] border border-[#1F2128] hover:border-[#C5A059] rounded flex items-center justify-between cursor-pointer transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <img
@@ -232,8 +247,7 @@ export const OutfitBuilder: React.FC<OutfitBuilderProps> = ({
                         <div>
                           <p className="font-serif text-xs text-[#F8F9FA] line-clamp-1">{prod.name}</p>
                           <p className="text-[10px] font-mono text-[#C5A059]">
-                            {curr.symbol}
-                            {Math.round(prod.price * curr.rate).toLocaleString()}
+                            {formatINR(prod.price)}
                           </p>
                         </div>
                       </div>

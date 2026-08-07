@@ -3,13 +3,14 @@ import { motion } from 'motion/react';
 import { Product, MainCategory } from '../types';
 import { ShoppingBag, Eye, Sparkles, Layers, Search, Filter, X } from 'lucide-react';
 import { FabricDistortionCanvas } from './FabricDistortionCanvas';
+import { formatINR } from '../utils/formatCurrency';
 
 interface ProductShowcaseProps {
   products: Product[];
   onSelectProduct: (p: Product) => void;
   onAddToCart: (p: Product) => void;
   onAddToOutfitBuilder: (p: Product) => void;
-  currency: string;
+  currency?: string;
 }
 
 export const ProductShowcase: React.FC<ProductShowcaseProps> = ({
@@ -17,24 +18,26 @@ export const ProductShowcase: React.FC<ProductShowcaseProps> = ({
   onSelectProduct,
   onAddToCart,
   onAddToOutfitBuilder,
-  currency,
+  currency = 'INR',
 }) => {
+  const [selectedGender, setSelectedGender] = useState<'all' | 'men' | 'women'>('all');
   const [selectedMainCategory, setSelectedMainCategory] = useState<string>('All');
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>('All');
-  const [selectedCollection, setSelectedCollection] = useState<string>('All');
+  const [selectedCollection, setSelectedCollection] = useState<string>('All Collections');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [hoveredProductId, setHoveredProductId] = useState<string | null>(null);
-
   const mainCategories = [
     'All',
+    'Suits & Tailoring',
+    'Dresses & Gowns',
     'Top Wear',
     'Bottom Wear',
     'Footwear',
+    'Handbags & Leather',
+    'Fine Jewellery',
     'Accessories',
-    'Grooming',
-    'Innerwear',
+    'Grooming & Perfumes',
     'Luxury Essentials',
-    'Suits & Tailoring',
   ];
 
   const collectionsList = [
@@ -54,36 +57,36 @@ export const ProductShowcase: React.FC<ProductShowcaseProps> = ({
     'Trending This Week',
   ];
 
-  // Dynamically compute subcategories for selected main category
   const getSubcategories = () => {
-    if (selectedMainCategory === 'All') return [];
     const subs = new Set<string>();
-    products.forEach((p) => {
-      if (p.category === selectedMainCategory && p.subcategory) {
-        subs.add(p.subcategory);
-      }
-    });
+    if (selectedMainCategory === 'All') {
+      products.forEach((p) => {
+        if (p.subcategory) subs.add(p.subcategory);
+      });
+    } else {
+      products.forEach((p) => {
+        if (p.category === selectedMainCategory && p.subcategory) {
+          subs.add(p.subcategory);
+        }
+      });
+    }
     return Array.from(subs);
   };
 
   const currentSubcategories = getSubcategories();
 
-  const currencyRates: Record<string, { symbol: string; rate: number }> = {
-    USD: { symbol: '$', rate: 1.0 },
-    EUR: { symbol: '€', rate: 0.92 },
-    GBP: { symbol: '£', rate: 0.79 },
-    JPY: { symbol: '¥', rate: 155.0 },
-  };
-
-  const curr = currencyRates[currency] || currencyRates.USD;
-
-  const formatPrice = (usd: number) => {
-    const converted = Math.round(usd * curr.rate);
-    return `${curr.symbol}${converted.toLocaleString()}`;
+  const formatPrice = (inr: number) => {
+    return formatINR(inr);
   };
 
   // Filter products
   const filteredProducts = products.filter((p) => {
+    // Gender filter
+    if (selectedGender !== 'all') {
+      if (p.gender && p.gender !== selectedGender) return false;
+      if (!p.gender && selectedGender === 'women') return false;
+    }
+
     // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -120,36 +123,74 @@ export const ProductShowcase: React.FC<ProductShowcaseProps> = ({
   return (
     <section id="collection" className="py-24 bg-[#08080A] text-[#F8F9FA] border-t border-[#1F2128]">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header Title */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        {/* Header Title & Gender Filter */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
-            <span className="text-xs font-mono tracking-[0.3em] uppercase text-[#C5A059]">
-              AUTUMN / WINTER 2026/27 MENSWEAR FLAGSHIP
-            </span>
-            <h2 className="font-serif text-3xl sm:text-5xl uppercase tracking-tight text-[#F8F9FA] mt-2 font-normal">
-              Gentleman's <br />
-              <span className="italic font-light text-[#C5A059] font-serif">Signature Collection</span>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-xs font-mono tracking-[0.3em] uppercase text-[#C5A059]">
+                AUTUMN / WINTER 2026/27 FLAGSHIP CATALOGUE
+              </span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-5xl uppercase tracking-tight text-[#F8F9FA] font-normal">
+              Aurelius <br />
+              <span className="italic font-light text-[#C5A059] font-serif">Signature Atelier</span>
             </h2>
           </div>
 
-          {/* Search bar */}
-          <div className="relative w-full md:w-80">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Vicuña, Oxfords, Tourbillon..."
-              className="w-full bg-[#121316] border border-[#1F2128] focus:border-[#C5A059] rounded-full px-4 py-2.5 pl-10 text-xs text-[#F8F9FA] placeholder-[#EFECE6]/40 outline-none transition-colors"
-            />
-            <Search className="w-4 h-4 text-[#C5A059] absolute left-3.5 top-3" />
-            {searchQuery && (
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Gender Toggle */}
+            <div className="flex items-center gap-1.5 p-1 rounded-full bg-[#121316] border border-[#1F2128]">
               <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-3 text-[#EFECE6]/60 hover:text-[#F8F9FA]"
+                onClick={() => setSelectedGender('all')}
+                className={`px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all ${
+                  selectedGender === 'all'
+                    ? 'bg-[#C5A059] text-black font-semibold shadow-md'
+                    : 'text-white/60 hover:text-white'
+                }`}
               >
-                <X className="w-3.5 h-3.5" />
+                ALL COUTURE
               </button>
-            )}
+              <button
+                onClick={() => setSelectedGender('men')}
+                className={`px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all ${
+                  selectedGender === 'men'
+                    ? 'bg-[#C5A059] text-black font-semibold shadow-md'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                MEN'S
+              </button>
+              <button
+                onClick={() => setSelectedGender('women')}
+                className={`px-4 py-2 rounded-full text-xs font-mono tracking-wider transition-all ${
+                  selectedGender === 'women'
+                    ? 'bg-[#C5A059] text-black font-semibold shadow-md'
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                WOMEN'S
+              </button>
+            </div>
+
+            {/* Search bar */}
+            <div className="relative w-full md:w-72">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search Vicuña, Gowns, Oxfords..."
+                className="w-full bg-[#121316] border border-[#1F2128] focus:border-[#C5A059] rounded-full px-4 py-2 pl-10 text-xs text-[#F8F9FA] placeholder-[#EFECE6]/40 outline-none transition-colors"
+              />
+              <Search className="w-4 h-4 text-[#C5A059] absolute left-3.5 top-2.5" />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-2.5 text-[#EFECE6]/60 hover:text-[#F8F9FA]"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
