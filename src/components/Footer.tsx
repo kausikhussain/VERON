@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowUp, Mail, Check, Scissors, MapPin, Globe } from 'lucide-react';
+import { ArrowUp, Mail, Check, Scissors, MapPin, Globe, ShieldCheck } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -19,19 +19,19 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-[#08080A] text-[#F8F9FA] border-t border-[#1F2128] pt-20 pb-12 relative">
+    <footer className="bg-[#08080A] text-[#F8F9FA] border-t border-[#1F2128] pt-20 pb-12 relative select-none">
       <div className="max-w-7xl mx-auto px-6 space-y-16">
         {/* Top VIP Concierge Newsletter */}
         <div className="bg-[#121316] border border-[#1F2128] p-8 sm:p-12 rounded-lg flex flex-col lg:flex-row lg:items-center justify-between gap-8">
           <div className="space-y-2 max-w-xl">
             <span className="text-xs font-mono tracking-[0.3em] uppercase text-[#C5A059]">
-              PRIVILEGED ATELIER INVITATIONS
+              PRIVILEGED ATELIER INVITATIONS • INDIA & MAYFAIR
             </span>
             <h3 className="font-serif text-2xl sm:text-3xl text-[#F8F9FA] uppercase">
               Join the Aurelius Circle
             </h3>
             <p className="text-xs font-light text-[#EFECE6]/70 leading-relaxed">
-              Receive private invitations to private trunk shows, limited Vicuña drop releases, and seasonal lookbook pre-views.
+              Receive private invitations to trunk shows in Mumbai, New Delhi, and Bengaluru, limited Vicuña drop releases, and private stylist consultations.
             </p>
           </div>
 
@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
             {subscribed ? (
               <div className="flex items-center gap-2 text-xs font-mono text-[#C5A059] bg-[#08080A] px-4 py-3 rounded border border-[#C5A059]/40">
                 <Check className="w-4 h-4" />
-                <span>You have been admitted to the Aurelius Gazette.</span>
+                <span>Admitted to the Aurelius Gazette (India Atelier).</span>
               </div>
             ) : (
               <>
@@ -70,23 +70,31 @@ export const Footer: React.FC = () => {
               AURELIUS & CO.
             </span>
             <p className="text-xs text-[#EFECE6]/60 leading-relaxed max-w-sm font-light">
-              Digital Flagship of Haute Couture and Bespoke Menswear. Crafted in Mayfair London, Paris Place Vendôme, and Florence.
+              Digital Flagship of Haute Couture and Bespoke Menswear. Crafted in Mayfair London, Paris Place Vendôme, and tailored for discerning clientele across India.
             </p>
-            <div className="text-[10px] font-mono text-[#C5A059] uppercase tracking-widest pt-2">
-              ESTABLISHED MAYFAIR • 1846
+
+            {/* Indian Market Payments & Delivery Badge */}
+            <div className="p-3 bg-black/60 rounded border border-[#C5A059]/30 max-w-sm space-y-1.5 font-mono text-[10px]">
+              <div className="flex items-center gap-2 text-[#C5A059] font-bold">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>INDIAN LUXURY CONCIERGE ACTIVE</span>
+              </div>
+              <p className="text-white/60">
+                Prices in ₹ INR (incl. 12% GST). Instant UPI (Google Pay, PhonePe, Paytm, CRED), Net Banking, Cards & 25% Fitting Deposit.
+              </p>
             </div>
           </div>
 
           {/* Col 2: Flagship Boutiques */}
           <div className="space-y-3">
             <p className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase">
-              FLAGSHIP BOUTIQUES
+              INDIAN & GLOBAL BOUTIQUES
             </p>
             <ul className="space-y-2 text-xs">
+              <li className="hover:text-[#F8F9FA] transition-colors">The Taj Mahal Palace, Mumbai</li>
+              <li className="hover:text-[#F8F9FA] transition-colors">DLF Emporio, New Delhi</li>
+              <li className="hover:text-[#F8F9FA] transition-colors">UB City, Bengaluru</li>
               <li className="hover:text-[#F8F9FA] transition-colors">42 Savile Row, London</li>
-              <li className="hover:text-[#F8F9FA] transition-colors">12 Place Vendôme, Paris</li>
-              <li className="hover:text-[#F8F9FA] transition-colors">740 5th Avenue, New York</li>
-              <li className="hover:text-[#F8F9FA] transition-colors">6-Chome Ginza, Tokyo</li>
             </ul>
           </div>
 
@@ -96,14 +104,14 @@ export const Footer: React.FC = () => {
               ATELIER SERVICES
             </p>
             <ul className="space-y-2 text-xs">
-              <li className="hover:text-[#F8F9FA] transition-colors">Bespoke Fitting Reservation</li>
-              <li className="hover:text-[#F8F9FA] transition-colors">Private Personal Stylist</li>
+              <li className="hover:text-[#F8F9FA] transition-colors">Pan-India Home Fitting Trial</li>
+              <li className="hover:text-[#F8F9FA] transition-colors">Private Stylist Consultation</li>
               <li className="hover:text-[#F8F9FA] transition-colors">Garment Preservation & Care</li>
-              <li className="hover:text-[#F8F9FA] transition-colors">Traceability & Ethics</li>
+              <li className="hover:text-[#F8F9FA] transition-colors">Insured White-Glove Transit</li>
             </ul>
           </div>
 
-          {/* Col 4: Legal & Heritage */}
+          {/* Col 4: Legal & Ethics */}
           <div className="space-y-3">
             <p className="text-[10px] font-mono tracking-widest text-[#C5A059] uppercase">
               LEGAL & ETHICS
@@ -119,7 +127,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#1F2128] flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-[#EFECE6]/50 gap-4">
-          <p>© {new Date().getFullYear()} AURELIUS & CO. ALL RIGHTS RESERVED.</p>
+          <p>© {new Date().getFullYear()} AURELIUS & CO. INDIA & MAYFAIR. ALL RIGHTS RESERVED.</p>
 
           <button
             onClick={scrollToTop}

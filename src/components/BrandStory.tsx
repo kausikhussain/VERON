@@ -135,10 +135,9 @@ export const BrandStory: React.FC = () => {
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded border border-white/10 shadow-2xl">
               <img
                 ref={imageRef}
-                src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80&w=1200"
+                src="/assets/men/jackets/classic-grey-double-breasted-elegance.jpeg"
                 alt="Bespoke Tailoring Craftsmanship"
                 className="w-full h-full object-cover filter brightness-90 contrast-105"
-                referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#08080A] via-transparent to-transparent opacity-80" />
 
